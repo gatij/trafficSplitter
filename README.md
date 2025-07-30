@@ -37,7 +37,6 @@ The demo consists of:
 │       ├── Dockerfile
 │       ├── go.mod
 │       └── main.go
-└── start.sh                # Helper script to start the services
 ```
 
 ## How to Run

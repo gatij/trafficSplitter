@@ -1,0 +1,36 @@
+services:
+  # User Service v1
+  service-v1:
+    build:
+      context: ./service/v1
+    ports:
+      - "8081:8081"
+    networks:
+      - envoy-net
+
+  # User Service v2  
+  service-v2:
+    build:
+      context: ./service/v2
+    ports:
+      - "8082:8082"
+    networks:
+      - envoy-net
+
+  # Envoy Proxy for traffic splitting
+  envoy:
+    image: envoyproxy/envoy:v1.26-latest
+    ports:
+      - "8080:8080"  # Main service endpoint
+      - "9901:9901"  # Admin interface
+    volumes:
+      - ./envoy/config.yaml:/etc/envoy/envoy.yaml
+    command: /usr/local/bin/envoy -c /etc/envoy/envoy.yaml --log-level debug
+    networks:
+      - envoy-net
+    depends_on:
+      - service-v1
+      - service-v2
+
+networks:
+  envoy-net:
